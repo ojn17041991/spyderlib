@@ -28,22 +28,26 @@ func __char_timeout():
 		pass # Timer is not one-shot, so let it run.
 	else:
 		__char_timer.stop()
+		__reading_dialogue = false
+		emit_signal("final_char_in_dialogue")
 		if __auto_advance_dialogue:
 			__dialogue_timer.start()
 	
 	emit_signal("char_complete", _char)
 
 func __dialogue_timeout():
+	emit_signal("dialogue_complete", __text_stack[__dialogue_ptr]["id"])
 	__dialogue_ptr += 1
 	
 	if __dialogue_ptr < __text_stack.size():
+		__reading_dialogue = true
 		__char_ptr = 0
 		__char_timer.set_wait_time(__char_speed_normal)
 		__char_timer.start()
-		emit_signal("dialogue_complete", __text_stack[__dialogue_ptr]["id"])
 	else:
 		__char_ptr = 0
 		__dialogue_ptr = 0
+		__text_stack = []
 		emit_signal("stack_complete")
 
 
@@ -51,19 +55,22 @@ func __dialogue_timeout():
 #           SIGNALS           #
 ###############################
 signal char_complete
+signal dialogue_start
 signal dialogue_complete
+signal stack_start
 signal stack_complete
+signal final_char_in_dialogue
 
 ###############################
 #          VARIABLES          #
 ###############################
-var __char_speed_normal: float = 0.1 setget set_char_speed_normal, get_char_speed_normal
+var __char_speed_normal: float = 0.05 setget set_char_speed_normal, get_char_speed_normal
 func set_char_speed_normal(_char_speed_normal: float) -> void:
-	__char_speed_normal = _char_speed_normal
+	__char_timer.set_wait_time(__char_speed_normal)
 func get_char_speed_normal() -> float:
 	return __char_speed_normal
 
-var __char_speed_fast: float = 0.05 setget set_char_speed_fast, get_char_speed_fast
+var __char_speed_fast: float = 0.005 setget set_char_speed_fast, get_char_speed_fast
 func set_char_speed_fast(_char_speed_fast: float) -> void:
 	__char_speed_fast = _char_speed_fast
 func get_char_speed_fast() -> float:
@@ -80,6 +87,10 @@ func set_auto_advance_dialogue(_auto_advance_dialogue: bool) -> void:
 	__auto_advance_dialogue = _auto_advance_dialogue
 func get_auto_advance_dialogue() -> bool:
 	return __auto_advance_dialogue
+
+var __reading_dialogue: bool = false
+func is_reading_dialogue():
+	return __reading_dialogue
 
 ###############################
 #           EXTERNAL          #
@@ -137,4 +148,6 @@ func push_dialogue_to_stack(_id, _text):
 	__text_stack.push_back(_dialogue)
 
 func read_dialogue_stack():
+	emit_signal("stack_start")
+	__reading_dialogue = true
 	__char_timer.start()

@@ -228,6 +228,14 @@ func set_short_hop_force(_short_hop_force: float) -> void:
 func get_short_hop_force() -> float:
 	return __short_hop_force
 
+var __base_jump_release_multiplier: float = 1.0
+var __cur_jump_release_multiplier: float = __base_jump_release_multiplier
+var __jump_release_multiplier: float = __base_jump_release_multiplier setget set_jump_release_multiplier, get_jump_release_multiplier
+func set_jump_release_multiplier(_jump_release_multiplier: float) -> void:
+	__jump_release_multiplier = _jump_release_multiplier
+func get_jump_release_multiplier() -> float:
+	return __jump_release_multiplier
+
 ###############################
 #           MOVEMENT          #
 ###############################
@@ -284,13 +292,19 @@ func jump() -> void:
 
 func jump_release() -> void:
 	__jump_is_down = false
-	if __can_jump and __short_hop_on_release:
+	if __can_jump and __can_short_hop and __short_hop_on_release:
 		__direction.y = 0.0
-		__velocity.y = 0.0
+		if __velocity.y < 0.0:
+			__cur_jump_release_multiplier = __jump_release_multiplier
 
 func action_jump() -> void:
 	state = ACTOR_STATE.JUMPING
 	__direction.y = -1.0
+	if __can_short_hop and __short_hop_on_release:
+		if __jump_is_down:
+			__cur_jump_release_multiplier = __base_jump_release_multiplier
+		else:
+			__cur_jump_release_multiplier = __jump_release_multiplier
 
 func rejump() -> void:
 	action_rejump()
@@ -309,6 +323,8 @@ func jump_squat_finished() -> void:
 
 func land() -> void:
 	__rejump_counter = 0
+	if __can_short_hop and __short_hop_on_release:
+		__cur_jump_release_multiplier = __base_jump_release_multiplier
 	
 	if __can_crouch_land:
 		state = ACTOR_STATE.CROUCH_LAND
@@ -481,7 +497,7 @@ func _physics_process(delta):
 					__processed_direction.y = __direction.y * __speed
 					__velocity.y = __velocity.linear_interpolate(__processed_direction, __acceleration).y
 			
-			__velocity.y += SpyWorld.GLOBAL_GRAVITY * __gravity_multiplier * delta
+			__velocity.y += SpyWorld.GLOBAL_GRAVITY * __gravity_multiplier * __cur_jump_release_multiplier * delta
 			
 			# Speed cap.
 			__velocity.y = min(__velocity.y, __fall_speed_cap)
