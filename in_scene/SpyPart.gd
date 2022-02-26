@@ -341,20 +341,22 @@ func set_droplet_with_animated_texture(
 #             RAIN            #
 ###############################
 func set_rain(
+	_direction: Vector3 = Vector3(0.0, 1.0, 0.0),
 	_size_scale: float = 1.0,
 	_speed_scale: float = 1.0,
 	_accel_scale: float = 0.0,
+	_initial_particle_angle: float = 45.0,
 	_quantity: int = 10,
 	_area: Vector3 = Vector3(100.0, 0.0, 0.0),
 	_ttl: float = 3.0
 ) -> void:
 	__create_particles_material(
-		Vector3(0.0, 1.0, 0.0),
+		_direction,
 		2.5,
 		_area,
 		_speed_scale * 25.0,
 		0.1,
-		45.0,
+		_initial_particle_angle,
 		0.0,
 		0.0,
 		false,
@@ -375,6 +377,43 @@ func set_rain(
 func __set_rain_gradients() -> void:
 	__rain_gradient.set_color(0, Color(0.0, 0.0, 1.0, 1.0))
 	__rain_gradient.set_color(1, Color(0.0, 0.0, 1.0, 1.0))
+
+func set_rain_with_texture(
+	_texture_ref: String,
+	_direction: Vector3 = Vector3(0.0, 1.0, 0.0),
+	_size_scale: float = 1.0,
+	_speed_scale: float = 1.0,
+	_accel_scale: float = 0.0,
+	_initial_particle_angle: float = 0.0,
+	_quantity: int = 10,
+	_area: Vector3 = Vector3(100.0, 0.0, 0.0),
+	_ttl: float = 3.0
+) -> void:
+	__create_particles_material(
+		_direction,
+		2.5,
+		_area,
+		_speed_scale * 25.0,
+		0.1,
+		_initial_particle_angle,
+		0.0,
+		1.0,
+		false,
+		_accel_scale,
+		_size_scale
+	)
+	
+	__apply_gradient_to_particles_material(__rain_gradient)
+	
+	__set_particles(
+		_speed_scale,
+		_quantity,
+		_ttl,
+		false,
+		0.0
+	)
+	
+	__apply_texture_to_particles(_texture_ref)
 
 ###############################
 #             SNOW            #
