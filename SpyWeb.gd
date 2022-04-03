@@ -31,11 +31,15 @@ func _get_request_completed(_result, _response_code, _headers, _body):
 		emit_signal("get_callback", {})
 
 func POST(_data):
-	var _full_url: String =  ""
-	if OS.get_name() == "HTML5":
-		_full_url = private_url + "&name=" + _data.name + "&score=" + str(_data.score)
-	else:
-		_full_url = private_url + "/" + _data.name + "/" + str(_data.score)
+	var _full_url: String = private_url
+	var ampersand = ""
+	for key in _data:
+		_full_url += ampersand + key + "=" + str(_data[key])
+		ampersand = "&"
+	__poster.request(_full_url, [])
+
+func POST_CUSTOM_URL(_query_string):
+	var _full_url: String = private_url + _query_string
 	__poster.request(_full_url, [])
 
 func _post_request_completed(_result, _response_code, _headers, _body):
