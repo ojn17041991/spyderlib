@@ -19,3 +19,10 @@ func request_screen_shake(_ms, _force):
 	emit_signal("screen_shake_start", _ms, _force)
 func complete_screen_shake():
 	emit_signal("screen_shake_end")
+
+signal generic_request_start
+signal generic_request_end
+func make_generic_request(_dict):
+	emit_signal("generic_request_start", _dict)
+func complete_generic_request():
+	emit_signal("generic_request_end")

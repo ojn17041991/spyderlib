@@ -20,6 +20,3 @@ func __set_fps(_fps):
 	if OS.is_debug_build():
 		__cur_fps = _fps
 		emit_signal("fps_update", __cur_fps)
-
-# Future Development:
-# - Enable debug mode, in which you can create objects in the scene by clicking, and set the position (and possibly other properties) of your objects with a UI.
