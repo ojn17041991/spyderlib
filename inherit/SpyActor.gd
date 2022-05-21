@@ -76,6 +76,27 @@ var __was_on_floor: bool = false
 var __was_on_ceiling: bool = false
 var __fall_speed_cap: int = 999999999 # OJN: INF is always negative???
 
+# SNAP #
+var __use_snap: bool = true
+func set_use_snap(_use_snap: bool) -> void:
+	__use_snap = _use_snap
+func get_use_snap() -> bool:
+	return __use_snap
+
+var __snap_direction: Vector2 = Vector2.DOWN
+func set_snap_direction(_snap_direction: Vector2) -> void:
+	__snap_direction = _snap_direction
+func get_snap_direction() -> Vector2:
+	return __snap_direction
+
+var __snap_length: float = 32.0
+func set_snap_length(_snap_length: float) -> void:
+	__snap_length = _snap_length
+func get_snap_length() -> float:
+	return __snap_length
+
+var __snap_vector: Vector2 = __snap_direction * __snap_length
+
 # CAN MOVE #
 var __can_move: bool = false setget set_can_move, get_can_move
 func set_can_move(_can_move: bool) -> void:
@@ -495,4 +516,7 @@ func _physics_process(delta):
 			__velocity.y = min(__velocity.y, __fall_speed_cap)
 		
 		# Update the velocity.
-		__velocity = move_and_slide(__velocity, __floor_normal)
+		if __use_snap and state != ACTOR_STATE.JUMPING and state != ACTOR_STATE.REJUMPING:
+			__velocity = move_and_slide_with_snap(__velocity, __snap_vector, Vector2.UP, true, 4, deg2rad(91))
+		else:
+			__velocity = move_and_slide(__velocity, __floor_normal, true)
