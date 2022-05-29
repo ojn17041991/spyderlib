@@ -74,6 +74,7 @@ var __velocity: Vector2 = Vector2.ZERO
 var __last_velocity: Vector2 = Vector2.ZERO
 var __was_on_floor: bool = false
 var __was_on_ceiling: bool = false
+var __was_on_wall: bool = false
 var __fall_speed_cap: int = 999999999 # OJN: INF is always negative???
 
 # SNAP #
@@ -252,41 +253,14 @@ func get_jump_release_multiplier() -> float:
 ###############################
 #           MOVEMENT          #
 ###############################
-func left() -> void:
-	__direction.x -= 1.0
-	__update_state()
+func set_direction(_direction: Vector2) -> void:
+	__direction = _direction
 
-func left_release() -> void:
-	__direction.x += 1.0
-	__update_state()
+func set_direction_x(_x: float) -> void:
+	__direction.x = _x
 
-func right() -> void:
-	__direction.x += 1.0
-	__update_state()
-
-func right_release() -> void:
-	__direction.x -= 1.0
-	__update_state()
-
-func up() -> void:
-	if __can_float:
-		__direction.y -= 1.0
-	__update_state()
-
-func up_release() -> void:
-	if __can_float:
-		__direction.y += 1.0
-	__update_state()
-
-func down() -> void:
-	if __can_float:
-		__direction.y += 1.0
-	__update_state()
-
-func down_release() -> void:
-	if __can_float:
-		__direction.y -= 1.0
-	__update_state()
+func set_direction_y(_y: float) -> void:
+	__direction.y = _y
 
 func jump() -> void:
 	if __can_move and __can_move_y and __can_jump:
@@ -370,6 +344,9 @@ func just_left_floor() -> void:
 func ceiling_hit() -> void:
 	pass
 
+func wall_hit() -> void:
+	pass
+
 func jump_peak() -> void:
 	pass
 
@@ -435,6 +412,10 @@ func _process(delta):
 				
 				ceiling_hit()
 			
+			if !__was_on_wall and is_on_wall():
+				
+				wall_hit()
+			
 			if __last_velocity.y <= 0.0 and __velocity.y > 0.0:
 				
 				jump_peak()
@@ -457,6 +438,7 @@ func _process(delta):
 			
 			__was_on_floor = is_on_floor()
 			__was_on_ceiling = is_on_ceiling()
+			__was_on_wall = is_on_wall()
 
 func _physics_process(delta):
 	if __can_move:
@@ -517,6 +499,6 @@ func _physics_process(delta):
 		
 		# Update the velocity.
 		if __use_snap and state != ACTOR_STATE.JUMPING and state != ACTOR_STATE.REJUMPING:
-			__velocity = move_and_slide_with_snap(__velocity, __snap_vector, Vector2.UP, true, 4, deg2rad(91))
+			__velocity = move_and_slide_with_snap(__velocity, __snap_vector, Vector2.UP, true, 4, deg2rad(91), false)
 		else:
-			__velocity = move_and_slide(__velocity, __floor_normal, true)
+			__velocity = move_and_slide(__velocity, __floor_normal, true, 4, 0.785398, false)
