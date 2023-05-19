@@ -2,51 +2,57 @@ extends Node2D
 
 onready var __getter: HTTPRequest = HTTPRequest.new()
 onready var __poster: HTTPRequest = HTTPRequest.new()
-var public_url: String = "" setget set_public_url
-func set_public_url(_url):
-	public_url = _url
-var private_url: String = ""setget set_private_url
-func set_private_url(_url):
-	private_url = _url
+onready var __patcher: HTTPRequest = HTTPRequest.new()
+onready var __deleter: HTTPRequest = HTTPRequest.new()
+
 signal get_callback
 signal post_callback
+signal patch_callback
+signal delete_callback
+
+var base_address: String = "" setget set_base_address
+func set_base_address(_base_address):
+	base_address = _base_address
 
 func _ready():
 	add_child(__getter)
 	add_child(__poster)
+	add_child(__patcher)
+	add_child(__deleter)
 	__getter.connect("request_completed", self, "_get_request_completed")
 	__poster.connect("request_completed", self, "_post_request_completed")
+	__patcher.connect("request_completed", self, "_patch_request_completed")
+	__deleter.connect("request_completed", self, "_delete_request_completed")
 
-func GET():
-	__getter.request(public_url, [])
+func GET(_endpoint):
+	__getter.request(base_address + _endpoint, [], true, HTTPClient.METHOD_GET)
 
 func _get_request_completed(_result, _response_code, _headers, _body):
-	if _result == HTTPRequest.RESULT_SUCCESS and _response_code == 200:
+	var _dict: Dictionary = {}
+	if _result == HTTPRequest.RESULT_SUCCESS and _response_code >= 200 and _response_code < 300:
 		var _response_str: String = _body.get_string_from_utf8()
 		if OS.get_name() == "HTML5":
 			_response_str = _jsonp_to_json(_response_str)
-		var _json: Dictionary = parse_json(_response_str)
-		emit_signal("get_callback", _json)
-	else:
-		emit_signal("get_callback", {})
+		_dict = parse_json(_response_str)
+	emit_signal("get_callback", _response_code, _dict)
 
-func POST(_data):
-	var _full_url: String = private_url
-	var ampersand = ""
-	for key in _data:
-		_full_url += ampersand + key + "=" + str(_data[key])
-		ampersand = "&"
-	__poster.request(_full_url, [])
-
-func POST_CUSTOM_URL(_query_string):
-	var _full_url: String = private_url + _query_string
-	__poster.request(_full_url, [])
+func POST(_endpoint, _payload):
+	__poster.request(base_address + _endpoint, [], true, HTTPClient.METHOD_POST, _payload)
 
 func _post_request_completed(_result, _response_code, _headers, _body):
-	if _result == HTTPRequest.RESULT_SUCCESS and _response_code == 200:
-		emit_signal("post_callback", true)
-	else:
-		emit_signal("post_callback", false)
+	emit_signal("post_callback", _result == HTTPRequest.RESULT_SUCCESS and _response_code >= 200 and _response_code < 300)
+
+func PATCH(_endpoint, _payload):
+	__patcher.request(base_address + _endpoint, [], true, HTTPClient.METHOD_PATCH, _payload)
+
+func _patch_request_completed(_result, _response_code, _headers, _body):
+	emit_signal("patch_callback", _result == HTTPRequest.RESULT_SUCCESS and _response_code >= 200 and _response_code < 300)
+
+func DELETE(_endpoint):
+	__patcher.request(base_address + _endpoint, [], true, HTTPClient.METHOD_DELETE)
+
+func _delete_request_completed(_result, _response_code, _headers, _body):
+	emit_signal("delete_callback", _result == HTTPRequest.RESULT_SUCCESS and _response_code >= 200 and _response_code < 300)
 
 func _jsonp_to_json(_jsonp):
 	var obj_start = "var jsonp = "
