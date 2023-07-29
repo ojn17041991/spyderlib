@@ -37,7 +37,7 @@ func _get_request_completed(_result, _response_code, _headers, _body):
 	emit_signal("get_callback", _response_code, _dict)
 
 func POST(_endpoint, _payload):
-	__poster.request(base_address + _endpoint, [], true, HTTPClient.METHOD_POST, _payload)
+	__poster.request(base_address + _endpoint, ["Content-Type: application/json"], true, HTTPClient.METHOD_POST, _payload)
 
 func _post_request_completed(_result, _response_code, _headers, _body):
 	emit_signal("post_callback", _result == HTTPRequest.RESULT_SUCCESS and _response_code >= 200 and _response_code < 300)
@@ -53,8 +53,3 @@ func DELETE(_endpoint):
 
 func _delete_request_completed(_result, _response_code, _headers, _body):
 	emit_signal("delete_callback", _result == HTTPRequest.RESULT_SUCCESS and _response_code >= 200 and _response_code < 300)
-
-func _jsonp_to_json(_jsonp):
-	var obj_start = "var jsonp = "
-	var _json = _jsonp.substr(obj_start.length(), _jsonp.length() - obj_start.length())
-	return _json
