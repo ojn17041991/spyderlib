@@ -22,22 +22,18 @@ func clear_checkpoint(_id: int) -> void:
 		__checkpoints[_id] = {}
 
 func save_to_file(_file_name: String, _save_id: int, _save_dict: Dictionary) -> void:
-	var _file = File.new()
-	
 	var _full_file_name: String = "user://" + __game_save_name + "_" + str(_save_id)
-	_file.open(_full_file_name, File.WRITE)
+	var _file: FileAccess = FileAccess.open(_full_file_name, FileAccess.WRITE)
 	
-	var json: String = JSON.print(_save_dict)
+	var json: String = JSON.stringify(_save_dict)
 	_file.store_string(json)
 	
 	_file.close()
 
-func load_from_file(_file_name: String) -> Dictionary:
-	var _file = File.new()
-	
-	if _file.file_exists(_file_name):
-		_file.open(_file_name, File.READ)
-		var _save_dict = parse_json(_file.get_as_text())
+func load_from_file(_file_name: String) -> Dictionary:	
+	if FileAccess.file_exists(_file_name):
+		var _file: FileAccess = FileAccess.open(_file_name, FileAccess.READ)
+		var _save_dict = JSON.parse_string(_file.get_as_text())
 		_file.close()
 		return _save_dict
 	else:

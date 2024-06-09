@@ -1,4 +1,4 @@
-tool
+@tool
 extends Node
 
 #########
@@ -9,10 +9,10 @@ extends Node
 # - When the project runs, the code will execute.
 #########
 
-export var bus_name: String = ""
-export var bus_index: int = 1
-export var bus_route: String = "Master"
-export var bus_effects: Array = [] # Should be of type AudioEffect.
+@export var bus_name: String = ""
+@export var bus_index: int = 1
+@export var bus_route: String = "Master"
+@export var bus_effects: Array = [] # Should be of type AudioEffect.
 
 func _ready():
 	if bus_index < AudioServer.bus_count:

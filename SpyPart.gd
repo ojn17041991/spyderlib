@@ -1,11 +1,11 @@
-extends Particles2D
+extends GPUParticles2D
 class_name SpyPart
 
-onready var __fire_gradient: Gradient = Gradient.new()
-onready var __smoke_gradient: Gradient = Gradient.new()
-onready var __rain_gradient: Gradient = Gradient.new()
-onready var __snow_gradient: Gradient = Gradient.new()
-onready var __floater_gradient: Gradient = Gradient.new()
+@onready var __fire_gradient: Gradient = Gradient.new()
+@onready var __smoke_gradient: Gradient = Gradient.new()
+@onready var __rain_gradient: Gradient = Gradient.new()
+@onready var __snow_gradient: Gradient = Gradient.new()
+@onready var __floater_gradient: Gradient = Gradient.new()
 
 func _ready():
 	_set_colour_gradients()
@@ -557,8 +557,8 @@ func __create_particles_material(
 	_size_scale: float = 1.0 # 1.0 = 1px or 1:1 for a Texture.
 ) -> void:
 	
-	process_material = ParticlesMaterial.new()
-	process_material.emission_shape = ParticlesMaterial.EMISSION_SHAPE_BOX
+	process_material = ParticleProcessMaterial.new()
+	process_material.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_BOX
 	process_material.emission_box_extents = _area
 	process_material.direction = _direction
 	process_material.spread = _spread_degrees
@@ -584,7 +584,7 @@ func __apply_scale_curve_to_particles_material(_curve_points: Array) -> void:
 
 func __apply_gradient_to_particles_material(_colour_gradient: Gradient) -> void:
 	
-	var __colour_gradient_texture: GradientTexture = GradientTexture.new()
+	var __colour_gradient_texture: GradientTexture2D = GradientTexture2D.new()
 	__colour_gradient_texture.gradient = _colour_gradient
 	process_material.color_ramp = __colour_gradient_texture
 

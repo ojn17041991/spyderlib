@@ -6,7 +6,7 @@ class_name SpyPartWeb
 ############
 func example_explosion():
 	create_particles_material(
-		ParticlesMaterial.EMISSION_SHAPE_BOX,
+		ParticleProcessMaterial.EMISSION_SHAPE_BOX,
 		Vector2(1.0, 1.0),
 		Vector2(0.0, -1.0),
 		360.0 / 2.0, # Half your desired angle. The angle extends in BOTH directions.
@@ -36,7 +36,7 @@ func example_explosion():
 
 func example_fire():
 	create_particles_material(
-		ParticlesMaterial.EMISSION_SHAPE_BOX,
+		ParticleProcessMaterial.EMISSION_SHAPE_BOX,
 		Vector2(45.0, 5.0),
 		Vector2(0.0, -1.0),
 		0.0,
@@ -62,7 +62,7 @@ func example_fire():
 func example_rain():
 	
 	create_particles_material(
-		ParticlesMaterial.EMISSION_SHAPE_BOX,
+		ParticleProcessMaterial.EMISSION_SHAPE_BOX,
 		Vector2(250.0, 1.0),
 		Vector2(0.0, 1.0),
 		5.0 / 2.0,
@@ -89,7 +89,7 @@ func start_effect() -> void:
 
 # Basic function for creating the material. Always call this first.
 func create_particles_material(
-	_emission_shape: int = ParticlesMaterial.EMISSION_SHAPE_BOX,	# The shape of the emission area.
+	_emission_shape: int = ParticleProcessMaterial.EMISSION_SHAPE_BOX,	# The shape of the emission area.
 	_emission_area: Vector2 = Vector2(1.0, 1.0),					# The size of the emission area.
 	_direction: Vector2 = Vector2.ZERO,								# Base direction in which the particles should move.
 	_spread_degrees: float = 0.0,									# Additional spread applied to the base direction.
@@ -109,14 +109,17 @@ func create_particles_material(
 	direction = _direction
 	spread = _spread_degrees
 	gravity = _gravity
-	initial_velocity = _initial_velocity
-	initial_velocity_random = _initial_velocity_random
-	angle = _angle
-	angular_velocity = _angular_velocity
-	angular_velocity_random = _angular_velocity_random
-	linear_accel = _accel_scale
-	flag_align_y = _angle_align_with_direction
-	scale_amount = _size_scale
+	initial_velocity_min = _initial_velocity
+	initial_velocity_max = _initial_velocity
+	angle_min = _angle
+	angle_max = _angle
+	angular_velocity_min = _angular_velocity
+	angular_velocity_max = _angular_velocity
+	linear_accel_min = _accel_scale
+	linear_accel_max = _accel_scale
+	particle_flag_align_y = _angle_align_with_direction
+	scale_amount_min = _size_scale
+	scale_amount_max = _size_scale
 
 # Applys a scale curve to the size of the particles.
 func apply_scale_curve(_curve_points: Array) -> void:

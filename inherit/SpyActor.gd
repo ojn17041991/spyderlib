@@ -1,4 +1,4 @@
-extends KinematicBody2D
+extends CharacterBody2D
 class_name SpyActor
 
 ###############################
@@ -42,7 +42,9 @@ func __update_state():
 ###############################
 #          RESOURCES          #
 ###############################
-var __ecb: CollisionShape2D = null setget set_ecb, get_ecb
+var __ecb: CollisionShape2D = null:
+	set = set_ecb,
+	get = get_ecb
 func set_ecb(_ecb: CollisionShape2D) -> void:
 	__ecb = _ecb
 func get_ecb() -> CollisionShape2D:
@@ -99,19 +101,25 @@ func get_snap_length() -> float:
 var __snap_vector: Vector2 = __snap_direction * __snap_length
 
 # CAN MOVE #
-var __can_move: bool = false setget set_can_move, get_can_move
+var __can_move: bool = false:
+	set = set_can_move,
+	get = get_can_move
 func set_can_move(_can_move: bool) -> void:
 	__can_move = _can_move
 func get_can_move() -> bool:
 	return __can_move
 
-var __can_move_x: bool = false setget set_can_move_x, get_can_move_x
+var __can_move_x: bool = false:
+	set = set_can_move_x,
+	get = get_can_move_x
 func set_can_move_x(_can_move_x: bool) -> void:
 	__can_move_x = _can_move_x
 func get_can_move_x() -> bool:
 	return __can_move_x
 
-var __can_move_y: bool = false setget set_can_move_y, get_can_move_y
+var __can_move_y: bool = false:
+	set = set_can_move_y,
+	get = get_can_move_y
 func set_can_move_y(_can_move_y: bool) -> void:
 	__can_move_y = _can_move_y
 func get_can_move_y() -> bool:
@@ -123,7 +131,9 @@ func set_can_move_all(_can_move: bool) -> void:
 	__can_move_y = _can_move
 
 # CAN JUMP #
-var __can_jump: bool = false setget set_can_jump, get_can_jump
+var __can_jump: bool = false:
+	set = set_can_jump,
+	get = get_can_jump
 func set_can_jump(_can_jump: bool) -> void:
 	__can_jump = _can_jump
 	__can_float = !__can_jump
@@ -131,7 +141,9 @@ func get_can_jump() -> bool:
 	return __can_jump
 
 # CAN CROUCH #
-var __can_crouch: bool = false setget set_can_crouch, get_can_crouch
+var __can_crouch: bool = false:
+	set = set_can_crouch,
+	get = get_can_crouch
 func set_can_crouch(_can_crouch: bool) -> void:
 	__can_crouch = _can_crouch
 func get_can_crouch() -> bool:
@@ -143,7 +155,9 @@ var __jump_squat_frame_counter: int = 0
 var __jump_is_down: bool = false
 var __jumping: bool = false
 
-var __jump_squat_frames: int = 0 setget set_jump_squat_frames, get_jump_squat_frames
+var __jump_squat_frames: int = 0:
+	set = set_jump_squat_frames,
+	get = get_jump_squat_frames
 func set_jump_squat_frames(_frames: int) -> void:
 	__jump_squat_frames = _frames
 	__can_jump_squat = __jump_squat_frames > 0
@@ -156,7 +170,9 @@ var __crouch_land_frame_counter: int = 0
 var __crouch_is_down: bool = false
 var __crouching: bool = false
 
-var __crouch_land_frames: int = 0 setget set_crouch_land_frames, get_crouch_land_frames
+var __crouch_land_frames: int = 0:
+	set = set_crouch_land_frames,
+	get = get_crouch_land_frames
 func set_crouch_land_frames(_frames: int) -> void:
 	__crouch_land_frames = _frames
 	__can_crouch_land = __crouch_land_frames > 0
@@ -164,19 +180,25 @@ func get_crouch_land_frames() -> int:
 	return __crouch_land_frames
 
 # SHORT HOP #
-var __can_short_hop: bool = false setget set_short_hop, get_short_hop
+var __can_short_hop: bool = false:
+	set = set_short_hop,
+	get = get_short_hop
 func set_short_hop(_can_short_hop: bool) -> void:
 	__can_short_hop = _can_short_hop
 func get_short_hop() -> bool:
 	return __can_short_hop
 
-var __short_hop_on_release: bool = false setget set_short_hop_on_release, get_short_hop_on_release
+var __short_hop_on_release: bool = false:
+	set = set_short_hop_on_release,
+	get = get_short_hop_on_release
 func set_short_hop_on_release(_short_hop_on_release: bool) -> void:
 	__short_hop_on_release = _short_hop_on_release
 func get_short_hop_on_release() -> bool:
 	return __short_hop_on_release
 
-var __short_hop_from_jump_squat: bool = false setget set_short_hop_from_jump_squat, get_short_hop_from_jump_squat
+var __short_hop_from_jump_squat: bool = false:
+	set = set_short_hop_from_jump_squat,
+	get = get_short_hop_from_jump_squat
 func set_short_hop_from_jump_squat(_short_hop_from_jump_squat: bool) -> void:
 	__short_hop_from_jump_squat = _short_hop_from_jump_squat
 func get_short_hop_from_jump_squat() -> bool:
@@ -185,7 +207,9 @@ func get_short_hop_from_jump_squat() -> bool:
 # REJUMP #
 var __can_rejump: bool = false
 var __rejump_counter: int = 0
-var __num_rejumps: int = 0 setget set_num_rejumps, get_num_rejumps
+var __num_rejumps: int = 0:
+	set = set_num_rejumps,
+	get = get_num_rejumps
 func set_num_rejumps(_rejumps: int) -> void:
 	__num_rejumps = _rejumps
 	__can_rejump = __num_rejumps > 0
@@ -193,50 +217,66 @@ func get_num_rejumps() -> int:
 	return __num_rejumps
 
 # FLOAT #
-var __can_float: bool = false setget set_can_float, get_can_float
+var __can_float: bool = false:
+	set = set_can_float,
+	get = get_can_float
 func set_can_float(_can_float: bool) -> void:
 	__can_float = _can_float
 	__can_jump = !__can_float
 func get_can_float():
 	return __can_float
 
-var __speed: float = 0.0 setget set_speed, get_speed
+var __speed: float = 0.0:
+	set = set_speed,
+	get = get_speed
 func set_speed(_speed: float) -> void:
 	__speed = _speed
 func get_speed() -> float:
 	return __speed
 
-var __gravity_multiplier: float = 1.0 setget set_gravity_multiplier, get_gravity_multiplier
+var __gravity_multiplier: float = 1.0:
+	set = set_gravity_multiplier,
+	get = get_gravity_multiplier
 func set_gravity_multiplier(_gravity_multiplier: float) -> void:
 	__gravity_multiplier = _gravity_multiplier
 func get_gravity_multiplier() -> float:
 	return __gravity_multiplier
 
-var __acceleration: float = 1.0 setget set_acceleration, get_acceleration
+var __acceleration: float = 1.0:
+	set = set_acceleration,
+	get = get_acceleration
 func set_acceleration(_acceleration: float) -> void:
 	__acceleration = _acceleration
 func get_acceleration() -> float:
 	return __acceleration
 
-var __decceleration: float = 1.0 setget set_decceleration, get_decceleration
+var __decceleration: float = 1.0:
+	set = set_decceleration,
+	get = get_decceleration
 func set_decceleration(_decceleration: float) -> void:
 	__decceleration = _decceleration
 func get_decceleration() -> float:
 	return __decceleration
 
-var __jump_force: float = 0.0 setget set_jump_force, get_jump_force
+var __jump_force: float = 0.0:
+	set = set_jump_force,
+	get = get_jump_force
 func set_jump_force(_jump_force: float) -> void:
 	__jump_force = _jump_force
 func get_jump_force() -> float:
 	return __jump_force
 
-var __rejump_force: float = 0.0 setget set_rejump_force, get_rejump_force
+var __rejump_force: float = 0.0:
+	set = set_rejump_force,
+	get = get_rejump_force
 func set_rejump_force(_rejump_force: float) -> void:
 	__rejump_force = _rejump_force
 func get_rejump_force() -> float:
 	return __rejump_force
 
-var __short_hop_force: float = 0.0 setget set_short_hop_force, get_short_hop_force
+var __short_hop_force: float = 0.0:
+	set = set_short_hop_force,
+	get = get_short_hop_force
 func set_short_hop_force(_short_hop_force: float) -> void:
 	__short_hop_force = _short_hop_force
 func get_short_hop_force() -> float:
@@ -244,7 +284,9 @@ func get_short_hop_force() -> float:
 
 var __base_jump_release_multiplier: float = 1.0
 var __cur_jump_release_multiplier: float = __base_jump_release_multiplier
-var __jump_release_multiplier: float = __base_jump_release_multiplier setget set_jump_release_multiplier, get_jump_release_multiplier
+var __jump_release_multiplier: float = __base_jump_release_multiplier:
+	set = set_jump_release_multiplier,
+	get = get_jump_release_multiplier
 func set_jump_release_multiplier(_jump_release_multiplier: float) -> void:
 	__jump_release_multiplier = _jump_release_multiplier
 func get_jump_release_multiplier() -> float:

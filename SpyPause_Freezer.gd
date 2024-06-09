@@ -14,7 +14,7 @@ func is_frozen() -> bool:
 	return __frozen
 
 func _ready():
-	SpyRequest.connect("freeze_frame_start", self, "_freeze_frame_start")
+	SpyRequest.connect("freeze_frame_start", _freeze_frame_start)
 
 func _freeze_frame_start(_ms: float) -> void:
 	__frozen = true

@@ -6,18 +6,18 @@ extends Node
 var __text_stack: Array = []
 var __char_ptr: int = 0
 var __dialogue_ptr: int = 0
-onready var __char_timer: Timer = Timer.new()
-onready var __dialogue_timer: Timer = Timer.new()
+@onready var __char_timer: Timer = Timer.new()
+@onready var __dialogue_timer: Timer = Timer.new()
 
 func _ready():
 	__char_timer.set_one_shot(false)
 	__char_timer.set_wait_time(__char_speed_normal)
-	__char_timer.connect("timeout", self, "__char_timeout")
+	__char_timer.connect("timeout", __char_timeout)
 	add_child(__char_timer)
 	
 	__dialogue_timer.set_one_shot(true)
 	__dialogue_timer.set_wait_time(__dialogue_speed)
-	__dialogue_timer.connect("timeout", self, "__dialogue_timeout")
+	__dialogue_timer.connect("timeout", __dialogue_timeout)
 	add_child(__dialogue_timer)
 
 func __char_timeout():
@@ -64,25 +64,33 @@ signal final_char_in_dialogue
 ###############################
 #          VARIABLES          #
 ###############################
-var __char_speed_normal: float = 0.05 setget set_char_speed_normal, get_char_speed_normal
+var __char_speed_normal: float = 0.05:
+	set = set_char_speed_normal,
+	get = get_char_speed_normal
 func set_char_speed_normal(_char_speed_normal: float) -> void:
 	__char_timer.set_wait_time(__char_speed_normal)
 func get_char_speed_normal() -> float:
 	return __char_speed_normal
 
-var __char_speed_fast: float = 0.005 setget set_char_speed_fast, get_char_speed_fast
+var __char_speed_fast: float = 0.005:
+	set = set_char_speed_fast,
+	get = get_char_speed_fast
 func set_char_speed_fast(_char_speed_fast: float) -> void:
 	__char_speed_fast = _char_speed_fast
 func get_char_speed_fast() -> float:
 	return __char_speed_fast
 
-var __dialogue_speed: float = 1.0 setget set_dialogue_speed, get_dialogue_speed
+var __dialogue_speed: float = 1.0:
+	set = set_dialogue_speed,
+	get = get_dialogue_speed
 func set_dialogue_speed(_dialogue_speed) -> void:
 	__dialogue_speed = _dialogue_speed
 func get_dialogue_speed() -> float:
 	return __dialogue_speed
 
-var __auto_advance_dialogue: bool = false setget set_auto_advance_dialogue, get_auto_advance_dialogue
+var __auto_advance_dialogue: bool = false:
+	set = set_auto_advance_dialogue,
+	get = get_auto_advance_dialogue
 func set_auto_advance_dialogue(_auto_advance_dialogue: bool) -> void:
 	__auto_advance_dialogue = _auto_advance_dialogue
 func get_auto_advance_dialogue() -> bool:

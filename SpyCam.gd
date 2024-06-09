@@ -24,14 +24,14 @@ var __zoom_max: float = 1.0
 
 
 func _ready():
-	SpyRequest.connect("screen_shake_start", self, "_screen_shake_start")
+	SpyRequest.connect("screen_shake_start", _screen_shake_start)
 
 func _process(delta):
 	if __shaking:
 		__dampener = ease($tm.time_left / $tm.wait_time, 1.0)
 		offset = Vector2(
-			rand_range(-__force, __force) * __dampener,
-			rand_range(-__force, __force) * __dampener
+			randf_range(-__force, __force) * __dampener,
+			randf_range(-__force, __force) * __dampener
 		)
 	
 	if __lerping:
@@ -53,10 +53,10 @@ func _on_tm_timeout() -> void:
 
 
 func start() -> void:
-	current = true
+	enabled = true
 
 func stop() -> void:
-	current = false
+	enabled = false
 
 func set_limits(_limits: Rect2) -> void:
 	limit_left = _limits.position.x

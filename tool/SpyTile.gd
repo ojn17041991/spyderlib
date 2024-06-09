@@ -1,12 +1,12 @@
-tool
+@tool
 extends TileMap
 
-export var __add_collision_to_tilemap: bool = false
-export var __tile_size: int = 32
-export var __sprite_sheet_size: Vector2 = Vector2(12, 4)
+@export var __add_collision_to_tilemap: bool = false
+@export var __tile_size: int = 32
+@export var __sprite_sheet_size: Vector2 = Vector2(12, 4)
 
 func _ready():
-	if Engine.editor_hint and __add_collision_to_tilemap:
+	if Engine.is_editor_hint and __add_collision_to_tilemap:
 		__generate_collision()
 
 func __generate_collision():

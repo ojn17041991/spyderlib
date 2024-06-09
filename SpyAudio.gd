@@ -18,7 +18,7 @@ func ScaleVolumeBasedOnVariable(variable, maxIV, minIV, maxOV, minOV):
 	volume_db = base_volume + ((abs_var - minIV) / (maxIV - minIV)) * (maxOV - minOV)
 
 func RandomisePitch(minP, maxP):
-	pitch_scale = rand_range(minP, maxP)
+	pitch_scale = randf_range(minP, maxP)
 
 func FadeInOverTime(_time):
 	fade_in = true
